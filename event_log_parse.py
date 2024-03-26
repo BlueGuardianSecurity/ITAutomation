@@ -1,3 +1,5 @@
+#pull critical errors out of event logs
+
 import win32evtlog
 import time
 import datetime
@@ -16,6 +18,7 @@ def check_event_logs():
     time_last_week = datetime.datetime.now() - datetime.timedelta(days=7)
     event_time_last_week = time.mktime(time_last_week.timetuple())
 
+    #date and time
     timestamp = datetime.datetime.now().strftime("%Y_%m_%d_%H%M")
     filename = f"Error_Log_{timestamp}.txt"
 
@@ -32,6 +35,7 @@ def check_event_logs():
             if event_created.timestamp() < event_time_last_week:
                 continue  
 
+            #writes to new file or overwrites if one exists
             if event.EventType == win32evtlog.EVENTLOG_ERROR_TYPE:
                 message = f"Critical Error Detected on {event_created}: Error in {event.SourceName}: {event.StringInserts}"
                 write_to_file(filename, message)
